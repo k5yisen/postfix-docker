@@ -1,0 +1,4 @@
+# Rewrite From header to use Kubilay <info@devk5yops.com>
+/^From:.*root.*/ REPLACE From: Kubilay <info@devk5yops.com>
+/^From:.*<.*@smtp\.devk5yops\.com>/ REPLACE From: Kubilay <info@devk5yops.com>
+/^From:.*<.*@devk5yops\.com>/ REPLACE From: Kubilay <info@devk5yops.com>

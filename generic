@@ -1,0 +1,4 @@
+# Rewrite all From headers to use display name "Kubilay"
+/^root@/  Kubilay <info@devk5yops.com>
+/@smtp\.devk5yops\.com$/  Kubilay <info@devk5yops.com>
+/@devk5yops\.com$/  Kubilay <info@devk5yops.com>

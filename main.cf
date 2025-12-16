@@ -1,0 +1,35 @@
+# Send-only configuration - only listen on localhost
+inet_interfaces = loopback-only
+
+# Only allow trusted networks (Docker subnet)
+mynetworks = 172.17.0.0/16, 127.0.0.0/8, 10.123.0.0/16, 10.124.0.0/16
+
+# Send-only mode - do not accept mail for any domains
+# Force IPv4 to avoid IPv6 reachability issues in some Docker hosts
+inet_protocols = ipv4
+mydestination = 
+local_recipient_maps =
+
+# Hostname of your mail server (FQDN for EHLO)
+myhostname = smtp.devk5yops.com
+# Origin domain for outgoing mail (what appears after @ in sender addresses)
+myorigin = devk5yops.com
+mydomain = devk5yops.com
+
+# Rewrite all envelope and header sender addresses to use Kubilay <info@devk5yops.com>
+# This ensures SPF checks against devk5yops.com, not smtp.devk5yops.com
+sender_canonical_maps = regexp:/etc/postfix/sender_canonical
+smtp_generic_maps = regexp:/etc/postfix/generic
+smtp_header_checks = regexp:/etc/postfix/header_checks
+masquerade_domains = $mydomain
+local_header_rewrite_clients = static:all
+
+
+# Basic postfix configs
+smtp_use_tls = yes
+smtp_tls_security_level = may
+smtp_tls_loglevel = 1
+
+# Required relay restrictions for smtpd to start
+smtpd_relay_restrictions = permit_mynetworks, reject_unauth_destination
+

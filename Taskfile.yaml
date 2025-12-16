@@ -1,0 +1,115 @@
+version: '3'
+
+vars:
+  IMAGE_NAME: postfix-smtp
+  CONTAINER_NAME: postfix
+  HOSTNAME: smtp.devk5yops.com
+  NETWORK: dock_net
+  TEST_EMAIL_1: isen.kubilay@gmail.com 
+  TEST_EMAIL_2: isen.kubilay@outlook.com
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+  build:
+    desc: Build the postfix-smtp Docker image
+    cmds:
+      - sudo docker build -t {{.IMAGE_NAME}} .
+  
+  docker-network:
+    desc: Create Docker network if it doesn't exist
+    cmds:
+      - |
+        if [ -z "$(sudo docker network ls --filter name=^{{.NETWORK}}$ --format="{{.Name}}")" ]; then
+          docker network create \
+          --driver bridge \
+          --subnet 10.123.0.0/16 \
+          --ip-range 10.123.5.0/24 \
+          --gateway 10.123.0.1 \
+          dock_net
+        else
+          echo "Network {{.NETWORK}} already exists.";
+        fi
+
+  run:
+    desc: Run the postfix container
+    cmds:
+      - sudo docker run -d --restart always --name {{.CONTAINER_NAME}} --hostname {{.HOSTNAME}} -p 25:25 --network {{.NETWORK}} {{.IMAGE_NAME}}
+
+  test-send-0:
+    desc: Test with sender canonical rewriting to devk5yops.com
+    cmds:
+      - sleep 3
+      - sudo docker exec {{.CONTAINER_NAME}} bash -c 'echo "Send-only server test" | mail -s "Final Test" {{.TEST_EMAIL_1}}'
+
+  check-send-logs-0:
+    desc: Check mail logs for SPF test results
+    cmds:
+      - sleep 3
+      - sudo docker exec {{.CONTAINER_NAME}} tail -25 /var/log/mail.log | grep -E "(from=|status=|Final)"
+
+  test-send-1:
+    desc: Test send-only server with info@devk5yops.com
+    cmds:
+      - sleep 3
+      - sudo docker exec {{.CONTAINER_NAME}} bash -c 'echo "Send-only server test" | mail -s "Test from info@devk5yops.com" {{.TEST_EMAIL_2}}'
+
+  check-send-logs-1:
+    desc: Check mail logs for send test results
+    cmds:
+      - sleep 2
+      - sudo docker exec {{.CONTAINER_NAME}} tail -20 /var/log/mail.log | grep -E "(from=|to=isen|status=)"
+
+  check-queue:
+    desc: Check postfix mail queue
+    cmds:
+      - sudo docker exec {{.CONTAINER_NAME}} bash -c "postqueue -p"
+
+  logs:
+    desc: View container logs
+    cmds:
+      - sudo docker logs {{.CONTAINER_NAME}}
+
+  tail-logs:
+    desc: Tail mail logs
+    cmds:
+      - sudo docker exec {{.CONTAINER_NAME}} tail -f /var/log/mail.log
+
+  stop:
+    desc: Stop the postfix container
+    cmds:
+      - sudo docker stop {{.CONTAINER_NAME}}
+
+  start:
+    desc: Start the postfix container
+    cmds:
+      - sudo docker start {{.CONTAINER_NAME}}
+
+  restart:
+    desc: Restart the postfix container
+    cmds:
+      - sudo docker restart {{.CONTAINER_NAME}}
+
+  clean:
+    desc: Stop and remove the postfix container
+    cmds:
+      - sudo docker rm -f {{.CONTAINER_NAME}}
+    ignore_error: true
+
+  rebuild:
+    desc: Clean, rebuild and run the container
+    cmds:
+      - task: clean
+      - task: build
+      - task: run
+
+  test-all:
+    desc: Run all tests in sequence
+    cmds:
+      - task: test-send-0
+      - task: check-send-logs-0
+      - task: test-send-1
+      - task: check-send-logs-1
+      - task: check-queue

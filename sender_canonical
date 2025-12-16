@@ -1,0 +1,4 @@
+# Rewrite all sender addresses to use info@devk5yops.com
+# This ensures SPF checks pass and emails come from a proper address
+/^root@/  info@devk5yops.com
+/@smtp\.devk5yops\.com$/  info@devk5yops.com
