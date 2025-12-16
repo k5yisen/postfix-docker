@@ -27,4 +27,5 @@
 ### Tail mail logs
 `task tail-logs`
 
+### Asciinema postfix-docker-installation
 [![asciicast](https://asciinema.org/a/jixyd0kj4RwRpOwSDBKJnjx3A.svg)](https://asciinema.org/a/jixyd0kj4RwRpOwSDBKJnjx3A)
