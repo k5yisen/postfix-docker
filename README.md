@@ -1,5 +1,5 @@
 
-### Build the postfix-smtp Docker image
+### Build the postfix-smtp docker image
 `task build`
 
 ### Create Docker network if it doesn't exist
@@ -13,7 +13,6 @@
 
 ### Check mail logs for SPF test results
 `task check-send-logs-0`
-
 
 ### Test send-only server with info@devk5yops.com
 `task test-send-1`
