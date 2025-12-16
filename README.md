@@ -27,4 +27,4 @@
 ### Tail mail logs
 `task tail-logs`
 
-[![asciicast](https://asciinema.org/a/jixyd0kj4RwRpOwSDBKJnjx3A.svg)](https://asciinema.org/a/jixyd0kj4RwRpOwSDBKJnjx3A)
+<a href="https://asciinema.org/a/jixyd0kj4RwRpOwSDBKJnjx3A" target="_blank"><img src="https://asciinema.org/a/jixyd0kj4RwRpOwSDBKJnjx3A.svg" /></a>
