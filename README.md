@@ -1,3 +1,6 @@
+## Prerequisites
+- Docker Engine 24+
+- [`go-task`](https://taskfile.dev/#/installation) to run the predefined automation in `Taskfile.yml`
 
 ### Build the postfix-smtp docker image
 `task build`
