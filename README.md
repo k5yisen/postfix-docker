@@ -1,6 +1,7 @@
 ## Prerequisites
 - Docker Engine
 - [`go-task`](https://taskfile.dev/#/installation) to run the predefined automation in `Taskfile.yaml`
+- Domain in my setup(devk5yops.com)
 
 ### Build the postfix-smtp docker image
 `task build`
